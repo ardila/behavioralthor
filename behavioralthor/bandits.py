@@ -19,7 +19,14 @@ def fruits_vs_chairs_L3(template=None):
     dataset = dataset1()
     images = dataset.get_images()
     if template is None:
-        template = simffa_params.l3_params
-    splits = dataset.fruit_vs_chair_splits
-    eval_config = {'precomp_splits': splits, 'metric_screen': 'classifier', 'metric_kwargs': {'model_type': 'MCC2'}}
+        template = simffa_params.l3_pamporams
+    eval_config = {
+        'npc_train': 20,
+        'npc_test': 20,
+        'num_splits': 5,
+        'catfunc': lambda x: x['category'],
+        'train_q': lambda x: (x['obj'] in dataset.obj_set1) and (x['category'] in ['Fruits', 'Chairs']),
+        'test_q': [lambda x: (x['obj'] in dataset.obj_set1) and (x['category'] in ['Fruits', 'Chairs'])],
+        'metric_screen': 'classifier',
+        'metric_kwargs': {'model_type': 'MCC2'}}
     return scope.dp_sym_loss(template, images, dataset.meta, eval_config)
