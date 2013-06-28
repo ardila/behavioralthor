@@ -1,0 +1,15 @@
+distribute==0.6.35
+Pillow==2.0.0
+-e git+http://github.com/yamins81/yamutils.git#egg=yamutils
+-e git+http://github.com/yamins81/pyll.git@learning#egg=pyll
+-e git+http://github.com/yamins81/tabular.git#egg=tabular
+-e git+http://github.com/yamins81/pythor3.git#egg=pythor3
+-e git+http://github.com/yamins81/scikit-data.git#egg=scikit-data
+-e git+http://github.com/yamins81/thoreano.git@develop#egg=thoreano
+-e git+http://github.com/yamins81/hyperopt.git#egg=hyperopt
+-e git+http://github.com/dicarlolab/bangmetric.git#egg=bangmetric
+-e git+http://github.com/yamins81/devthor.git#egg=devthor
+-e git+http://github.com/dicarlolab/kanalyze#egg=kanalyze
+-e git+http://github.com/dicarlolab/dldata#egg=dldata
+-e git+http://github.com/ardila/simffa.git#egg=simffa
+-e git+http://github.com/ardila/genthor.git@bugfix/nbytesproblem#egg=genthor
