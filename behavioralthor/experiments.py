@@ -1,5 +1,6 @@
 __author__ = 'headradio'
 from simffa import simffa_experiments
+from devthor.procedures import suggest_multiple_from_name
 
 
 def fruits_vs_chairs(dbname='fruits_vs_chairs', randomSearch=False):
@@ -20,7 +21,16 @@ def fruits_vs_chairs(dbname='fruits_vs_chairs', randomSearch=False):
         bandit_algo_kwargs_list = [{'gamma': 0.25, 'n_startup_jobs': 100} for _i in range(nExps)]
 
     N = None
-    exp = simffa_experiments.suggest_multiple_from_name(dbname, host, port, bandit_algo_names, bandit_names,
-                                                        exp_keys, N, bandit_args_list, bandit_kwargs_list,
-                                                        bandit_algo_args_list, bandit_algo_kwargs_list)
-    return exp
+    return suggest_multiple_from_name(
+        dbname=dbname,
+        host=host,
+        port=port,
+        bandit_algo_names=bandit_algo_names,
+        bandit_names=bandit_names,
+        exp_keys=exp_keys,
+        N=None,
+        bandit_args_list=bandit_args_list,
+        bandit_kwargs_list=bandit_kwargs_list,
+        bandit_algo_args_list=bandit_args_list,
+        bandit_algo_kwargs_list=bandit_algo_kwargs_list
+    )

@@ -1,2 +1,2 @@
 __author__ = 'headradio'
-from . import bandits, datasets
+from . import bandits, datasets, experiments
