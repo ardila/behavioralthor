@@ -11,5 +11,4 @@ Pillow==2.0.0
 -e git+http://github.com/yamins81/devthor.git#egg=devthor
 -e git+http://github.com/dicarlolab/kanalyze#egg=kanalyze
 -e git+http://github.com/dicarlolab/dldata#egg=dldata
--e git+http://github.com/ardila/simffa.git#egg=simffa
 -e git+http://github.com/ardila/genthor.git@bugfix/nbytesproblem#egg=genthor
