@@ -1,5 +1,4 @@
 __author__ = 'headradio'
-from simffa import simffa_experiments
 from devthor.procedures import suggest_multiple_from_name
 
 
