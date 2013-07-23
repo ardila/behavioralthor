@@ -1,7 +1,10 @@
 numpy>=1.7
 scipy>=0.12.0
-distribute==0.6.35
-Pillow==2.0.0
+distribute>=0.6.35
+Pillow>=2.0.0
+numexpr>=2.0.0
+Cython>=0.19.1
+pymongo
 tables
 joblib
 -e git+http://github.com/yamins81/yamutils.git#egg=yamutils
