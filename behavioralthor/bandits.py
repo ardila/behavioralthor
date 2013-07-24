@@ -51,6 +51,8 @@ Broken_objects = [
     'jewelry_35',
     '17_el_guitar',
     'jewelry_26b']
+
+
 @base.as_bandit(exceptions=slm_bandit_exceptions)
 def fruits_vs_chairs_L1R(template=None):
     """
@@ -105,6 +107,7 @@ def fruits_vs_chairs_L3(template=None):
         'metric_kwargs': {'model_type': 'MCC2'}}
     return scope.dp_sym_loss(template, dataset, eval_config)
 
+
 @base.as_bandit(exceptions=slm_bandit_exceptions)
 def fruits_vs_chairs_L2(template=None):
     """
@@ -130,6 +133,22 @@ def fruits_vs_chairs_L2(template=None):
         'test_q': fruits_and_chairs_1,
         'metric_screen': 'classifier',
         'metric_kwargs': {'model_type': 'MCC2'}}
+    return scope.dp_sym_loss(template, dataset, eval_config)
+
+
+@base.as_bandit(exceptions=slm_bandit_exceptions)
+def eight_way_imagenet_screen(template=None):
+    dataset = Imagenet
+    splits, labels = dataset.get_eight_way_splits()
+    if template is None:
+        template = devthor_new_new_params.l4_params
+    eval_config = {
+        'precomp_splits': splits,
+        'validations': [],
+        'labels': labels,
+        'metric_screen': 'classifier',
+        'metric_kwargs': {'model_type': 'MCC2'}
+    }
     return scope.dp_sym_loss(template, dataset, eval_config)
 
 @base.as_bandit(exceptions=slm_bandit_exceptions)
@@ -189,6 +208,7 @@ def dp_sym_loss(template_sample, dataset, eval_config, features=None, delete_mem
     record['status'] = 'ok'
     record['desc'] = template_sample
     return record
+
 
 
 def get_features(template_sample, dataset, record):
