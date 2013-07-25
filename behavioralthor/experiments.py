@@ -7,7 +7,7 @@ def fruits_vs_chairs(dbname='fruits_vs_chairs', randomSearch=False):
     port = 22334
     bandit_names = ['behavioralthor.bandits.fruits_vs_chairs_L3',
                     'behavioralthor.bandits.fruits_vs_chairs_L2',
-                    'behavioralthor.bandits.fruits_vs_chairs_L3',
+                    'behavioralthor.bandits.fruits_vs_chairs_L4',
                     'behavioralthor.bandits.fruits_vs_chairs_L1R']
     nExps = len(bandit_names)
     bandit_args_list = [() for _i in range(nExps)]

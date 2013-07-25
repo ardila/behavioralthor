@@ -210,13 +210,14 @@ def dp_sym_loss(template_sample, dataset, eval_config, features=None, delete_mem
     return record
 
 
-
-def get_features(template_sample, dataset, record):
+def get_features(template_sample, dataset, record=None):
     """
     :param template_sample: parameters sample from a template
     :param dataset: dataset object to extract features from
     :return: memmap of features
     """
+    if record is None:
+        record = {}
     print template_sample
     namebase = 'memmap_' + str(hash(repr(template_sample)))
     record['namebase'] = namebase
