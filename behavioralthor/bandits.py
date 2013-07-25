@@ -109,6 +109,34 @@ def fruits_vs_chairs_L3(template=None):
 
 
 @base.as_bandit(exceptions=slm_bandit_exceptions)
+def object_level_fruits_and_chairs_L3(template=None):
+    """
+
+    :param template: Template of features to sample from
+    :return: scope evaluation of fruits vs chair classification for dataset 1
+    """
+    dataset = dataset1()
+    fruits_and_chairs_1 = lambda x: (x['category'] in frozenset(['fruits', 'chairs'])) and \
+                                    (x['obj'] in frozenset(dataset.obj_set1)) and \
+                                    (x['obj'] not in frozenset(Broken_objects))
+    # fruits_and_chairs_1 = {'obj': dataset.obj_set1, 'category': ['Fruits', 'Chairs']}
+    if template is None:
+        template = devthor_new_new_params.l3_params
+    eval_config = {
+        'npc_train': 15,
+        'npc_test': 5,
+        'npc_validate': 0,
+        'num_splits': 4,
+        'split_by': 'obj',
+        'labelfunc': 'obj',
+        'train_q': fruits_and_chairs_1,
+        'test_q': fruits_and_chairs_1,
+        'metric_screen': 'classifier',
+        'metric_kwargs': {'model_type': 'MCC2'}}
+    return scope.dp_sym_loss(template, dataset, eval_config)
+
+
+@base.as_bandit(exceptions=slm_bandit_exceptions)
 def fruits_vs_chairs_L2(template=None):
     """
 
