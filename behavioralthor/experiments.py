@@ -5,7 +5,7 @@ from devthor.procedures import suggest_multiple_from_name
 def fruits_vs_chairs(dbname='fruits_vs_chairs', randomSearch=False):
     host = 'localhost'
     port = 22334
-    bandit_names = ['behavioralthor.bandits.object_level_fruits_and_chairs_L3'
+    bandit_names = ['behavioralthor.bandits.object_level_fruits_and_chairs_L3',
                     'behavioralthor.bandits.fruits_vs_chairs_L3',
                     'behavioralthor.bandits.fruits_vs_chairs_L2',
                     'behavioralthor.bandits.fruits_vs_chairs_L4',
