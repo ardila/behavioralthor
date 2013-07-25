@@ -6,14 +6,18 @@ def fruits_vs_chairs(dbname='fruits_vs_chairs', randomSearch=False):
     host = 'localhost'
     port = 22334
     bandit_names = ['behavioralthor.bandits.object_level_fruits_and_chairs_L3',
-                    'behavioralthor.bandits.fruits_vs_chairs_L3',
+                    # 'behavioralthor.bandits.fruits_vs_chairs_L3',
                     'behavioralthor.bandits.fruits_vs_chairs_L2',
                     'behavioralthor.bandits.fruits_vs_chairs_L4',
                     'behavioralthor.bandits.fruits_vs_chairs_L1R']
     nExps = len(bandit_names)
     bandit_args_list = [() for _i in range(nExps)]
     bandit_kwargs_list = [{} for _i in range(nExps)]
-    exp_keys = ['obj_L3', 'L3', 'L2', 'L4', 'L1R']
+    exp_keys = ['obj_L3',
+                # 'L3',
+                'L2',
+                'L4',
+                'L1R']
     if randomSearch:
         bandit_algo_names = ['hyperopt.Random'] * nExps
         bandit_algo_args_list = [() for _i in range(nExps)]
