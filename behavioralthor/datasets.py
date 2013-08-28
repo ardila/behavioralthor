@@ -53,3 +53,8 @@ class dataset1(TrainingDatasetScreen2):
                 self._meta = self._get_meta()
                 tb.io.savebinary(self.CACHE_PATH+'/dataset1_meta.npz', self._meta)
         return self._meta
+
+
+
+#We used this for pixel screening
+from imagenet.dldatasets import Challenge_Synsets_100_Random
