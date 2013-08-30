@@ -9,6 +9,7 @@ from multiprocessing import Pool
 import functools
 import os
 import cPickle
+from scipy.stats import norm
 
 
 # def two_normed_correlation(F, meta, means, vars):
@@ -41,32 +42,61 @@ def bigtrain(Xtrain, Xtest, ytrain, ytest, unnormed_margins=False, means_and_var
     M = np.empty((N, nfeat))                  # preallocate mean matrix
     V = np.empty((N, nfeat))                  # preallocate variance matrix
     P = np.empty((Xtest.shape[0], N))         # preallocate margin matrix
-
+    print 'calculating means and variances'
     # "Training" i.e. get means and variances for every class
     if means_and_variances is None:
         means_and_variances = memmapped_means_and_variances_in_parallel(Xtrain, ytrain, cats, n_jobs)
     M, V = means_and_variances
     #"testing"
+    print 'testing'
     #again, this could be parallelized in various ways
     tind = 0
+
+    results = Parallel(n_jobs=n_jobs)(delayed(get_class_margins)(Xtest[ytest == k], kind, M, V, unnormed_margins)
+                                      for kind, k in enumerate(cats))
     for kind, k in enumerate(cats):
-        #get the feature-wise means for all the binary problems at once
-        m1 = 0.5 * (M[kind] + M)
-
-        #get the feature-wise stds for all the binary problems at once
-        s1 = np.sqrt(0.5 * (V[kind]) + 0.5 * V +
-                     0.25 * (M[kind]**2) - 0.5 * (M[kind] * M) + 0.25 * (M**2))
-
-        #get the per-category normalized means, doing all normalizations at once
-        m0 = 0.5 * (M[kind] - M) / s1
-        #normalize the means to be of norm 1
-        m0 = m0/np.apply_along_axis(np.linalg.norm, 1, m0)[:, np.newaxis]
-        #now, for each test image of category k, do:
         class_idx = ytest == k
-        Xk = Xtest[class_idx]
-        P[class_idx] = Parallel(n_jobs=n_jobs)(delayed(normalize_and_dot)
-                                              (x, m1, s1, m0, unnormed_margins) for x in Xk)
-        P[class_idx, kind] = 0
+        P[class_idx] = results[kind]
+    return P
+    # for kind, k in enumerate(cats):
+    #     #get the feature-wise means for all the binary problems at once
+    #     m1 = 0.5 * (M[kind] + M)
+    #
+    #     #get the feature-wise stds for all the binary problems at once
+    #     s1 = np.sqrt(0.5 * (V[kind]) + 0.5 * V +
+    #                  0.25 * (M[kind]**2) - 0.5 * (M[kind] * M) + 0.25 * (M**2))
+    #
+    #     #get the per-category normalized means, doing all normalizations at once
+    #     m0 = 0.5 * (M[kind] - M) / s1
+    #     #normalize the means to be of norm 1
+    #     m0 = m0/np.apply_along_axis(np.linalg.norm, 1, m0)[:, np.newaxis]
+    #     #now, for each test image of category k, do:
+    #     class_idx = ytest == k
+    #     Xk = Xtest[class_idx]
+    #     P[class_idx] = [normalize_and_dot(x, m1, s1, m0, unnormed_margins) for x in Xk]
+    #     # P[class_idx] = Parallel(n_jobs=n_jobs)(delayed(normalize_and_dot)
+    #     #                                       (x, m1, s1, m0, unnormed_margins) for x in Xk)
+    #     P[class_idx, kind] = 0
+    # return P
+
+
+def get_class_margins(Xk, kind, M, V, unnormed_margins):
+    #get the feature-wise means for all the binary problems at once
+    m1 = 0.5 * (M[kind] + M)
+
+    #get the feature-wise stds for all the binary problems at once
+    s1 = np.sqrt(0.5 * (V[kind]) + 0.5 * V +
+                 0.25 * (M[kind]**2) - 0.5 * (M[kind] * M) + 0.25 * (M**2))
+
+    #get the per-category normalized means, doing all normalizations at once
+    m0 = 0.5 * (M[kind] - M) / s1
+    #normalize the means to be of norm 1
+    m0 = m0/np.apply_along_axis(np.linalg.norm, 1, m0)[:, np.newaxis]
+    #now, for each test image of category k, do:
+    P = np.asarray([normalize_and_dot(x, m1, s1, m0, unnormed_margins) for x in Xk])
+    # P[class_idx] = Parallel(n_jobs=n_jobs)(delayed(normalize_and_dot)
+    #                                       (x, m1, s1, m0, unnormed_margins) for x in Xk)
+    P[:, kind] = 0
     return P
 
 
@@ -181,3 +211,46 @@ def save_mean_and_var(class_features, label, path):
     np.save(var_filename, var)
     return mean_filename, var_filename
 
+
+def distance_matrix_from_margin_matrix(M):
+    """
+    :param M: #images by #categories
+        Margin matrix which stores margin relative to correct decision (positive is correct)
+        for a 2 way balanced task
+    :return: array, #category by # category.
+        CM[i,j] = proportion of stimuli from category i confused with category j
+    """
+    assert np.sum(M == 0) == M.shape[0], 'There are multiple 0 margins for 1 or more images'
+    # Decisions are not included for class vs itself
+    correct_decision = M >= 0
+    y = np.array([int(np.argwhere(margin == 0)) for margin in M])
+    #Distance between two synsets is the average accuracy in a 2 way balanced task
+    rates = np.array([np.mean(correct_decision[y == i], 0) for i in np.unique(y)])
+    # rates = (rates+rates.T) / 2
+    dprimes = norm.ppf(rates) - norm.ppf(1-rates.T)
+    np.fill_diagonal(dprimes, 0)
+    return dprimes
+
+
+def densest_cluster(distance_matrix, cluster_size, hierarchical=True):
+
+    if hierarchical:
+        centroid = np.argmin(np.sum(distance_matrix, 0))
+
+        in_cluster = range(distance_matrix.shape[0]) == centroid
+        for index_of_point_to_add in range(cluster_size-1):
+
+            distances_to_cluster = np.mean(distance_matrix[np.ix_(in_cluster, ~in_cluster)], 0)
+            closest_point = np.argmin(distances_to_cluster)
+            index = np.argwhere(~in_cluster)[closest_point]
+            in_cluster[index] = True
+    else:
+        means_and_inds = [(np.mean(distance_matrix[ind]), ind) for ind in range(distance_matrix.shape[0])]
+        sorted_inds = [means_and_ind[1] for means_and_ind in means_and_inds]
+        cluster_inds = set(sorted_inds[:cluster_size-1])
+        in_cluster = [i in cluster_inds for i in range(distance_matrix.shape[0])]
+
+    return in_cluster
+
+#
+# densities = [np.mean(D[np.ix_(cluster, cluster)]) for cluster in [densest_cluster(D,i) for i in range(D.shape[0])]]
