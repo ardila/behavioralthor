@@ -252,5 +252,16 @@ def densest_cluster(distance_matrix, cluster_size, hierarchical=True):
 
     return in_cluster
 
-#
-# densities = [np.mean(D[np.ix_(cluster, cluster)]) for cluster in [densest_cluster(D,i) for i in range(D.shape[0])]]
+
+def sorted_distance_matrix_from_margin_matrix(M):
+    D = distance_matrix_from_margin_matrix(M)
+    new_order = np.argsort(np.mean(D, 1))
+    D = D[new_order]
+    D = D[:, new_order]
+    return D
+
+
+def density_curve(D):
+    return [np.mean(D[np.ix_(cluster, cluster)]) for cluster in [densest_cluster(D, i) for i in range(D.shape[0])]]
+
+
