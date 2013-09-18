@@ -6,8 +6,8 @@ from dldata.metrics.utils import get_subset_splits
 import numpy as np
 
 
-#dataset = imagenet.dldatasets.Challenge_Synsets_2_Pixel_Hard()
-dataset = imagenet.dldatasets.Big_Pixel_Screen()
+dataset = imagenet.dldatasets.Challenge_Synsets_2_Pixel_Hard()
+#dataset = imagenet.dldatasets.Big_Pixel_Screen()
 #dataset = imagenet.dldatasets.HvM_Categories()
 
 preproc = {'crop': None,

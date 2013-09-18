@@ -1,6 +1,6 @@
 __author__ = 'headradio'
 from hyperopt import base
-from dldata.HvM.neural_datasets import compute_metric_base
+from dldata.metrics.utils import compute_metric_base
 from devthor import devthor_new_new_params
 from datasets import dataset1
 from pyll import scope
