@@ -1,5 +1,5 @@
 __author__ = 'headradio'
-from behavioralthor.utils import *
+from behavioralthor.utils import bigtrain 
 import imagenet
 from collections import defaultdict
 #from dldata.metrics.utils import get_subset_splits
