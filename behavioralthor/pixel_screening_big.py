@@ -56,14 +56,14 @@ print len(np.unique(y))
 def chunks(l, n):
     return [l[i:i+n] for i in range(0, len(l), n)]
 
-chunk_size = 50000
+chunk_size = 200
 
-for chunk in chunks(split['train'], chunk_size):
-    print float(max(chunk))/max(split['train'])
-    Xtrain[chunk] = P[chunk]
-for chunk in chunks(split['test'], chunk_size):
-    print float(max(chunk))/max(split['test'])
-    Xtest[chunk] = P[chunk]
+for chunks1, chunks2 in zip(chunks(range(Xtrain.shape[0]), chunk_size), chunks(split['train'], chunk_size)):
+    print float(max(chunks1))/Xtrain.shape[0]
+    Xtrain[chunks1] = P[chunks2]
+for chunks1, chunks2 in zip(chunks(range(Xtest.shape[0]), chunk_size), chunks(split['test'], chunk_size)):
+    print float(max(chunks1))/Xtrain.shape[0]
+    Xtest[chunks1] = P[chunks2]
 
 ytrain = y[split['train']]
 ytest = y[split['test']]
