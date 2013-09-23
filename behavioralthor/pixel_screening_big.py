@@ -1,5 +1,5 @@
 __author__ = 'headradio'
-from behavioralthor.utils import *
+from behavioralthor.utils import bigtrain 
 import imagenet
 from collections import defaultdict
 #from dldata.metrics.utils import get_subset_splits
@@ -56,7 +56,7 @@ print len(np.unique(y))
 def chunks(l, n):
     return [l[i:i+n] for i in range(0, len(l), n)]
 
-chunk_size = 200
+chunk_size = 200000
 
 for chunks1, chunks2 in zip(chunks(range(Xtrain.shape[0]), chunk_size), chunks(split['train'], chunk_size)):
     print float(max(chunks1))/Xtrain.shape[0]
