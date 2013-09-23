@@ -52,7 +52,7 @@ def bigtrain(Xtrain, Xtest, ytrain, ytest, unnormed_margins=False, means_and_var
     #again, this could be parallelized in various ways
     tind = 0
 
-    results = Parallel(n_jobs=n_jobs)(delayed(get_class_margins)(Xtest[ytest == k], kind, M, V, unnormed_margins)
+    results = Parallel(n_jobs=n_jobs, verbose=100)(delayed(get_class_margins)(Xtest[ytest == k], kind, M, V, unnormed_margins)
                                       for kind, k in enumerate(cats))
     for kind, k in enumerate(cats):
         class_idx = ytest == k
