@@ -233,24 +233,26 @@ def distance_matrix_from_margin_matrix(M):
 
 
 def densest_cluster(distance_matrix, cluster_size, hierarchical=True):
-
+    indexes = []
     if hierarchical:
         centroid = np.argmin(np.sum(distance_matrix, 0))
-
+        indexes.append(centroid)
         in_cluster = range(distance_matrix.shape[0]) == centroid
         for index_of_point_to_add in range(cluster_size-1):
-
+            if index_of_point_to_add % 100 == 0:
+                print float(index_of_point_to_add/cluster_size)
             distances_to_cluster = np.mean(distance_matrix[np.ix_(in_cluster, ~in_cluster)], 0)
             closest_point = np.argmin(distances_to_cluster)
             index = np.argwhere(~in_cluster)[closest_point]
             in_cluster[index] = True
+            indexes.append(index)
     else:
         means_and_inds = [(np.mean(distance_matrix[ind]), ind) for ind in range(distance_matrix.shape[0])]
         sorted_inds = [means_and_ind[1] for means_and_ind in means_and_inds]
         cluster_inds = set(sorted_inds[:cluster_size-1])
         in_cluster = [i in cluster_inds for i in range(distance_matrix.shape[0])]
 
-    return in_cluster
+    return indexes
 
 
 def sorted_distance_matrix_from_margin_matrix(M):
@@ -262,6 +264,7 @@ def sorted_distance_matrix_from_margin_matrix(M):
 
 
 def density_curve(D):
-    return [np.mean(D[np.ix_(cluster, cluster)]) for cluster in [densest_cluster(D, i) for i in range(D.shape[0])]]
+    indexes = densest_cluster(D, D.shape[0])
+    return [np.mean(D[np.ix_(cluster, cluster)]) for cluster in [indexes[:i] for i in range(D.shape[0])]]
 
 
