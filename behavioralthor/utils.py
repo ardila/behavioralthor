@@ -268,3 +268,37 @@ def density_curve(D):
     return [np.mean(D[np.ix_(cluster, cluster)]) for cluster in [indexes[:i] for i in range(D.shape[0])]]
 
 
+def training_curve(F, dataset, npc_train_list, eval_config_base):
+    """
+    A commonly used eval_config_base and npc_train_list:
+    npc_train_list = np.round(np.logspace(0,np.log10(200), 12))
+    eval_config_base = {'train_q': None,
+                        'test_q': None,
+                        'npc_test': 20,
+                        'npc_validate: 0,
+                        'num_splits': 5,
+                        'split_by': 'synset',
+                        'labelfunc': 'synset',
+                        'metric_screen': 'classifier',
+                        'metric_kwargs': {'model_type': 'MCC2',
+                                          'model_kwargs': None,
+                                          'nomalization': False,
+                                          'trace_normalize': True,
+                                          'margins': False}
+                        }
+
+
+    :param F: features to analyze
+    :param dataset: dataset the features were extracted from
+    :param npc_train_list: list of number of training examples per category to use
+    :param eval_config_base: base eval_config to modify
+    :return: list of result dictionaries (see compute_metric_base in dldata.metrics.utils)
+    """
+    eval_configs = []
+    for n in npc_train_list:
+        eval_config = eval_config_base.copy()
+        eval_config['npc_train'] = int(n)
+        eval_configs.append(eval_config)
+    results = Parallel(
+        n_jobs=-1, verbose=300)(delayed(compute_metric)(F, dataset, eval_config) for eval_config in eval_configs)
+    return results
