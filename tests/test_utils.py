@@ -5,6 +5,7 @@ import dldata.metrics.utils
 import behavioralthor.utils
 import scipy.stats
 
+
 def test_bigtrain_decision_and_margins():
     np.random.seed(0)
     nfeat = 50
@@ -41,8 +42,6 @@ def test_bigtrain_decision_and_margins():
     test_errors2 = np.sum(M2, 1) < 0
     assert np.all(test_errors1 == test_errors2), \
         'The unnormed margin argument does not affect decisions'
-
-
     assert np.mean(test_errors1 == dldata_errors) > .96, \
         'Bigtrain is at least as consistent with MCC2 as MCC is with MCC2 in terms of decisions made'
     m = results['split_results'][0]['test_margins']
