@@ -3,6 +3,10 @@ import numpy as np
 import itertools
 import tabular as tb
 
+class dataset_lage(dataset1):
+    def __init__(self):
+        self.templates[0]['n_ex_per_model'] = 500
+        dataset1.__init__(self, internal_canonical=True)
 
 class dataset1(TrainingDatasetScreen2):
 

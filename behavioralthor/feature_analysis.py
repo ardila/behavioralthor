@@ -97,9 +97,14 @@ eval_config_base = {'train_q': None,
                     'labelfunc': 'synset',
                     'metric_screen': 'classifier',
                     'metric_kwargs': {'model_type': 'linear_model.SGDClassifier',
-                                      'model_kwargs': None,
-                                      'normalization': False,
-                                      'trace_normalize': True,
+                                      'model_kwargs': {'shuffle': True,
+                                                       'loss': "hinge",
+                                                       'alpha': 0.01,
+                                                       'n_iter': 71,
+                                                       'fit_intercept': True,
+                                                       'n_jobs': -1},
+                                      'normalization': True,
+                                      'trace_normalize': False,
                                       'margins': False}
                     }
 pixel_results = behavioralthor.utils.training_curve(pF, dataset, npc_train_list, eval_config_base)
