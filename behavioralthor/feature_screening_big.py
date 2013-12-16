@@ -14,7 +14,7 @@ import numpy as np
 
 label_filename = 'not_yet'
 
-y = cPickle.load('/home/ardila/synsets.p')
+y = cPickle.load(open('/home/ardila/synsets.p', 'rb'))
 #This was too slow
 #splits = get_subset_splits(dataset.meta, npc_train=150, npc_tests=[50], num_splits=1, catfunc=lambda x: x['synset'])
 #split = splits[0][0]
