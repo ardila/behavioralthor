@@ -54,10 +54,10 @@ chunk_size = 200000
 
 for chunks1, chunks2 in zip(chunks(range(Xtrain.shape[0]), chunk_size), chunks(split['train'], chunk_size)):
     print float(max(chunks1))/Xtrain.shape[0]
-    Xtrain[chunks1] = F[chunks2]
+    Xtrain[chunks1] = F[chunks2]-np.mean(F[chunks2], axis=1)[:, np.newaxis]
 for chunks1, chunks2 in zip(chunks(range(Xtest.shape[0]), chunk_size), chunks(split['test'], chunk_size)):
     print float(max(chunks1))/Xtrain.shape[0]
-    Xtest[chunks1] = F[chunks2]
+    Xtest[chunks1] = F[chunks2]-np.mean(F[chunks2], axis=1)[:, np.newaxis]
 
 ytrain = y[split['train']]
 ytest = y[split['test']]
