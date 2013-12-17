@@ -34,7 +34,7 @@ for i in range(y.shape[0]):
 
 
 screen_name = 'CHALLENGE_FEATURE'
-F = np.memmap('/home/ardila/features.dat', dtype='float32', mode='w+', shape=(1200256, 8192))
+F = np.memmap('/home/ardila/features.dat', dtype='float32', mode='w+', shape=(1200256, 8192))[:120000]
 Xtrain = np.memmap(filename='train_memmap_'+str(screen_name)+'.dat',
                    dtype='float32', mode='w+', shape=(len(split['train']), 4096*2))
 Xtest = np.memmap(filename='test_memmap_'+str(screen_name)+'.dat',
