@@ -9,17 +9,18 @@ feature_dir2 = '/diego_features/diego_features/b'
 files1 = [f for f in os.listdir(feature_dir1) if f.startswith('data_batch')]
 files2 = [f for f in os.listdir(feature_dir2) if f.startswith('data_batch')]
 fs = imagenet.dataset.get_img_source()
-extraction_name = 'challenge_set_v0'
-fp = np.memmap('features.dat', dtype='float32', mode ='w+', shape=(1200256, 8192))
-i = 1
+fp = np.memmap('features.dat', dtype='float32', mode ='w+', shape=(1200000, 8192))
+i = 0
 for f1, f2 in zip(files1, files2):
     print f1
-    print float(i)/1200256
+    print float(i)/1200000
     fb1 = cPickle.load(open(os.path.join(feature_dir1, f1), 'rb'))['data']
     fb2 = cPickle.load(open(os.path.join(feature_dir2, f2), 'rb'))['data']
     features = np.concatenate([fb1, fb1], axis=1)
+#    print features
     fp[i:i+128, :] = features
     i += 128
+del fp
     # db = cPickle.load(open(os.path.join(data_dir, df), 'rb'))
     # filenames = db['filenames']
     # tempfile = cStringIO.StringIO()
