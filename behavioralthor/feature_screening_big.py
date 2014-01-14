@@ -21,8 +21,8 @@ y = cPickle.load(open('/home/ardila/synsets.p', 'rb'))
 
 count = {}
 split = defaultdict(list)
-npctrain = 400
-npctest = 200
+npctrain = 2
+npctest = 1
 for i in range(y.shape[0]):
     count[y[i]] = count.get(y[i], 0) + 1
     if i % 1000 == 0:
@@ -34,7 +34,7 @@ for i in range(y.shape[0]):
 
 
 screen_name = 'CHALLENGE_FEATURE'
-F = np.memmap('/home/ardila/features.dat', dtype='float32', mode='w+', shape=(1200256, 8192))[:120000]
+F = np.memmap('/home/ardila/features.dat', dtype='float32', mode='r', shape=(1200000, 8192))
 Xtrain = np.memmap(filename='train_memmap_'+str(screen_name)+'.dat',
                    dtype='float32', mode='w+', shape=(len(split['train']), 4096*2))
 Xtest = np.memmap(filename='test_memmap_'+str(screen_name)+'.dat',

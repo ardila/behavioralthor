@@ -54,6 +54,7 @@ def bigtrain(Xtrain, Xtest, ytrain, ytest, unnormed_margins=False, means_and_var
 
     results = Parallel(n_jobs=n_jobs, verbose=100)(delayed(get_class_margins)(Xtest[ytest == k], kind, M, V, unnormed_margins)
                                       for kind, k in enumerate(cats))
+    cPickle.dump(results, open('feature_results.p', 'wb'))
     for kind, k in enumerate(cats):
         class_idx = ytest == k
         P[class_idx] = results[kind]
