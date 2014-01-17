@@ -144,8 +144,8 @@ def test():
     #allocating 30 testing vectors
     N1 = 30
     Xtest = np.zeros((3*N1, K))
-    Xtest[:N1/2, 0] = 1               #the first 5 vectors are "correct"
-    Xtest[N1/2:N1, 1] = 1             #the second 5 vectors are "wrong" -- they'll be confused with category 1
+    Xtest[:N1/2, 0] = 1               #the first 15 vectors are "correct"
+    Xtest[N1/2:N1, 1] = 1             #the second 15 vectors are "wrong" -- they'll be confused with category 1
     Xtest[N1:2*N1, 1] = 1             #the 10-20th vectors are all "correct"
     Xtest[2*N1:2*N1 + N1 / 2, 2] = 1  #the 20-25th vectors are "correct"
     Xtest[2*N1 + N1 / 2:, 1] = 1      #the 25-30th vectors are "wrong" -- they'll be confused with category 1
