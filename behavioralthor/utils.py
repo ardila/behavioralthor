@@ -105,7 +105,7 @@ def normalize_and_dot(x, m1, s1, m0, unnormed_margins):
     xn = (x-m1)/s1
     if not unnormed_margins:
         xn = xn/np.apply_along_axis(np.linalg.norm, 1, xn)[:, np.newaxis]
-    return np.sum(xn*m0, 1)
+    return elementwise_distances(x, m0)
 
 
 def elementwise_distances(A, B):

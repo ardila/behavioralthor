@@ -14,7 +14,7 @@ import imagenet.dldatasets as datasets
 label_filename = 'not_yet'
 
 y = cPickle.load(open('/home/ardila/synsets.p', 'rb'))
-F = np.memmap('/home/ardila/features.dat', dtype='float32', mode='r', shape=(1200000, 8192))
+F = np.memmap('/home/ardila/src/behavioralthor/features.dat', dtype='float32', mode='r', shape=(1200000, 8192))
 
 #m = tb.tabarray([[i] for i in y], names=['synset'])
 # synset_count = Counter(y)
@@ -80,13 +80,13 @@ chunk_size = 200000
 
 for chunks1, chunks2 in zip(chunks(range(Xtrain.shape[0]), chunk_size), chunks(split['train'], chunk_size)):
     print float(max(chunks1))/Xtrain.shape[0]
-    Xtrain[chunks1] = F[chunks2]-np.mean(F[chunks2], axis=1)[:, np.newaxis]
+    Xtrain[chunks1] = F[chunks2]
 for chunks1, chunks2 in zip(chunks(range(Xtest.shape[0]), chunk_size), chunks(split['test'], chunk_size)):
     print float(max(chunks1))/Xtrain.shape[0]
-    Xtest[chunks1] = F[chunks2]-np.mean(F[chunks2], axis=1)[:, np.newaxis]
-
+    Xtest[chunks1] = F[chunks2]
 ytrain = y[split['train']]
 ytest = y[split['test']]
+
 M = bigtrain(Xtrain, Xtest, ytrain, ytest, unnormed_margins=True, n_jobs=-1)
 filename = str(screen_name)+'margin_matrix'
 np.save(filename, M)
