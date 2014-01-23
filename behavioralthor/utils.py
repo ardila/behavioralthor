@@ -264,9 +264,23 @@ def sorted_distance_matrix_from_margin_matrix(M):
     return D
 
 
+
 def density_curve(D):
-    indexes = densest_cluster(D, D.shape[0])
-    return [np.mean(D[np.ix_(cluster, cluster)]) for cluster in [indexes[:i] for i in range(D.shape[0])]]
+    """
+    This method takes an ordered distance matrix and returns the average point to point distance of clusters created
+    starting with the first (upper or leftmost) point, and successively adding according to the order in the distance matrix
+    """
+    #indexes = densest_cluster(D, D.shape[0])
+    indexes = range(D.shape[0])
+    dc = np.zeros(D.shape[0])
+    sums = np.zeros(D.shape[0])
+    for points_added, index in zip(range(2,D.shape[0]), indexes[1:]):
+        new_idx = points_added+1
+        sums[points_added] = sums[points_added-1] +\
+                        np.sum(D[index, indexes[:points_added]])+\
+                        np.sum(D[indexes[:points_added], index ])
+        dc[points_added] = sums[points_added]/(new_idx+1)**2
+    return dc
 
 
 def training_curve(F, dataset, npc_train_list, eval_config_base):

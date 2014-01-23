@@ -16,10 +16,10 @@ label_filename = 'not_yet'
 y = cPickle.load(open('/home/ardila/synsets.p', 'rb'))
 F = np.memmap('/home/ardila/src/behavioralthor/features.dat', dtype='float32', mode='r', shape=(1200000, 8192))
 
-#m = tb.tabarray([[i] for i in y], names=['synset'])
+m = tb.tabarray([[i] for i in y], names=['synset'])
 # synset_count = Counter(y)
-# eval_config = {'train_q': lambda x: synset_count[x['synset']] > 550,
-#                'test_q': lambda x: synset_count[x['synset']] > 550,
+ eval_config = {'train_q': lambda x: synset_count[x['synset']] > 550,
+                'test_q': lambda x: synset_count[x['synset']] > 550,
 #                'npc_train': 500,
 #                'npc_test': 50,
 #                'npc_validate': 0,
