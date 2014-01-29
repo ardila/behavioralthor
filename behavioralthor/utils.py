@@ -2,11 +2,8 @@
 Various routines that are helpful for screening models/datasets
 """
 import numpy as np
-import itertools
 from joblib import Parallel, delayed
-from dldata.metrics.utils import compute_metric
-from multiprocessing import Pool
-import functools
+from dldata.metrics.utils import compute_metric_base
 import os
 import cPickle
 from scipy.stats import norm
@@ -283,7 +280,7 @@ def density_curve(D):
     return dc
 
 
-def training_curve(F, dataset, npc_train_list, eval_config_base):
+def training_curve(F, meta, npc_train_list, eval_config_base):
     """
     A commonly used eval_config_base and npc_train_list:
     npc_train_list = np.round(np.logspace(0,np.log10(200), 12))
@@ -315,5 +312,5 @@ def training_curve(F, dataset, npc_train_list, eval_config_base):
         eval_config['npc_train'] = int(n)
         eval_configs.append(eval_config)
     results = Parallel(
-        n_jobs=-1, verbose=300)(delayed(compute_metric)(F, dataset, eval_config) for eval_config in eval_configs)
+        n_jobs=-1, verbose=300)(delayed(compute_metric_base)(F, meta, eval_config) for eval_config in eval_configs)
     return results
